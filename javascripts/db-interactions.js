@@ -18,7 +18,7 @@ function getMovies(user){
 }
 
 // Adds a movie (with a UID)
-function addMovie(songFormObj){
+function addMovie(movieObject){
 	console.log("Adding Song: ", movieObject);
 
 	return new Promise(function(resolve, reject){
