@@ -105,6 +105,12 @@ $("#nav-login-link").click(function(){
 	});
 });
 
+// Logout Button onClick:
+$("#nav-logout-link").click( function(){
+	user.logOut();
+	console.log("CurrentUser: ", user.getUser());
+});
+
 
 
 
