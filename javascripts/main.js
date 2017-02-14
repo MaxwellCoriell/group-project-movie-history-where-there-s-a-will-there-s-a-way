@@ -69,7 +69,7 @@ $("#text-input").keypress( function(event){
 	if(event.keyCode === 13){
 
 		var userMovie = $("#text-input").val();
-		// Prevents an API call with bad search string
+		// Prevents an API call with bad user input
 		if(userMovie === "" || userMovie === " " || userMovie === undefined || userMovie.length <= 2){
 			console.log("INVALID USER INPUT ");
 			return;
