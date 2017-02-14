@@ -109,6 +109,9 @@ $("#nav-login-link").click(function(){
 $("#nav-logout-link").click( function(){
 	user.logOut();
 	console.log("CurrentUser: ", user.getUser());
+	$("#suggested-movies").html(" ");
+	$("#my-movies").html(" ");
+	$("#my-watched-movies").html(" ");
 });
 
 
