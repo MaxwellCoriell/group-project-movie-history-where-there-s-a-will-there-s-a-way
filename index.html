@@ -13,6 +13,12 @@
     <div>
       <img src="images/moviereel.jpeg" width="100" height="100">
       <h2>Movie Finder</h2>
+      <form>
+        <div class="form-group row input-div">
+          <div class="col-sm-10">
+            <input type="text" class="form-control form-control-lg" id="text-input" placeholder="Search OMDb and your tracked movies">
+          </div>
+        </div>
     </div>
       <nav>
         <a href="#" id="nav-new-movie-link">Find New Movies</a>
@@ -23,6 +29,61 @@
       </nav>
   </header>
   <div class="container" id="main-container">
+    <h2 id="current-list-location"></h2> <!--Current List Location -->
+    <div class="row">
+      <div class="form-group">
+        <div class="items-collection">
+          <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
+            <div class="info-block block-info clearfix">
+              <div data-toggle="buttons" class="btn-group bizmoduleselect">
+                <label class="btn btn-default">
+                  <div class="itemcontent">
+                    <span class="glyphicon glyphicon-inbox"></span>
+                    <h5>Show Untracked</h5>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
+            <div class="info-block block-info clearfix">
+              <div data-toggle="buttons" class="btn-group itemcontent">
+                <label class="btn btn-default">
+                  <div class="itemcontent">
+                    <span class="glyphicon glyphicon-eye-close"></span>
+                    <h5>Show Unwatched</h5>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
+            <div class="info-block block-info clearfix">
+              <div data-toggle="buttons" class="btn-group itemcontent">
+                <label class="btn btn-default">
+                  <div class="itemcontent">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    <h5>Show Watched</h5>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
+            <div class="info-block block-info clearfix">
+              <div data-toggle="buttons" class="btn-group itemcontent">
+                <label class="btn btn-default">
+                  <div class="itemcontent">
+                    <span class="glyphicon glyphicon-star"></span>
+                    <h5>Show Favorites</h5>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container" id="suggested-movies"></div>
     <div class="container" id="my-movies"></div>
     <div class="container" id="my-watched-movies"></div>
