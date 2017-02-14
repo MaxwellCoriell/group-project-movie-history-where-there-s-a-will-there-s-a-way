@@ -1,14 +1,21 @@
 'use strict';
 
+///////////////////////////////////////////////
+///		MODULAR (REQUIRED) VARIABLES		///
+///////////////////////////////////////////////
+
 let $ = require('jquery');
 
 // Required modules
 let templates = require("../templates/movie-grid.hbs");
 let db = require("./db-interactions.js");
 let user = require("./user.js");
+let api = require("./api-interactions.js");
 
 
-
+////////////////////////////////////
+///		METHODS/FUNCTIONS		////
+////////////////////////////////////
 
 function populateDOM(){
 	let currentUser = user.getUser();
@@ -29,9 +36,64 @@ function populateDOM(){
 											</section>`);
 		}
 	});
+
 }
 
 
+// OTHER METHODS
+function findDuplicates(searchedMovies, myMovies){
+	var i, j;
+
+	for(i = 0; i < searchedMovies.length; i++){
+		for(j = 0; j < myMovies.length; j++){
+			if(searchedMovies[i].imdbID === myMovies[j].imdbID){
+				console.log("MATCHED!!: ", searchedMovies[i].Title);
+			}
+		}
+	}
+}
+
+
+
+
+
+//////////////////////////////
+//		EVENT LISTENERS		//
+//////////////////////////////
+
+
+// When user hits enter after searching
+$("#text-input").keypress( function(event){
+
+	// When user hits the enter key in search bar
+	if(event.keyCode === 13){
+
+		var userMovie = $("#text-input").val();
+		// Prevents an API call with bad user input
+		if(userMovie === "" || userMovie === " " || userMovie === undefined || userMovie.length <= 2){
+			console.log("INVALID USER INPUT ");
+			return;
+		}
+
+		// Declare movie arrays
+		var searchedMovies;
+		var myMovies;
+		// Search for user specified movie (IN API)
+		api.searchFor(userMovie)
+		.then( function(apiMovies){
+			// Store the returned movies that were searched for (API)
+			searchedMovies = apiMovies;
+		})
+		.then( db.getMovies)
+		.then( function(dbMovies){
+			// Store the returned movies (DATABASE)
+			myMovies = dbMovies;
+		// Then find movies with matching imdmIDs among the two arrays
+		}).then( function(){
+			findDuplicates(searchedMovies, myMovies);
+		});
+	}
+});
 
 
 // Login button onClick:
@@ -42,3 +104,16 @@ $("#nav-login-link").click(function(){
 		populateDOM();
 	});
 });
+
+// Logout Button onClick:
+$("#nav-logout-link").click( function(){
+	user.logOut();
+	console.log("CurrentUser: ", user.getUser());
+	$("#suggested-movies").html(" ");
+	$("#my-movies").html(" ");
+	$("#my-watched-movies").html(" ");
+});
+
+
+
+
