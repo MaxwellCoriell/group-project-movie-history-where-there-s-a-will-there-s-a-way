@@ -2,11 +2,11 @@
 
 let $ = require('jquery');
 
-
 function searchFor(movie){
+	console.log("movie", movie);
 	return new Promise( function(resolve, reject){
 		$.ajax({
-			url: `http://www.omdbapi.com/?s=${movie}`,
+			url: `https://api.themoviedb.org/3/search/movie?query=${movie}&api_key=1425d42c47a975ca77e4f3f66bcb94d2&include_adult=false`,
 			type: "GET"
 		}).done( function(movieData){
 			console.log("XXX MovieData: ", movieData.Search);
@@ -22,8 +22,5 @@ function searchFor(movie){
 		});
 	});
 }
-
-
-
 
 module.exports = {searchFor};

@@ -1,6 +1,5 @@
 'use strict';
 
-
 let $ = require('jquery'); // Might not be necesary
 var firebase = require("./firebaseConfig");
 
@@ -24,7 +23,7 @@ function getMovies(){
 	return new Promise(function(resolve, reject){
 		$.ajax({
 			// url: `https://movie-history-6e707.firebaseio.com?orderBy="uid"&equalTo="${user}"`
-			url: `https://movie-history-6e707.firebaseio.com/movies.json`,
+			url: `https://movie-history-7a546.firebaseio.com/movies.json`,
 			type: "GET"
 		}).done( function(movieData){
 			console.log("GETMOVIES(): ", movieData);
@@ -36,14 +35,13 @@ function getMovies(){
 	});
 }
 
-
-// Adds a movie (with a UID)
+Adds a movie (with a UID)
 function addMovie(movieObject){
 	console.log("Adding Song: ", movieObject);
 
 	return new Promise(function(resolve, reject){
 		$.ajax({
-			url: `https://movie-history-6e707.firebaseio.com`,
+			url: `https://movie-history-7a546.firebaseio.com`,
 			type: "POST",
 			data: JSON.stringify(movieObject),
 			dataType: "json"
@@ -57,7 +55,7 @@ function addMovie(movieObject){
 function deleteMovie(movieID){
 	return new Promise( function(resolve, reject){
 		$.ajax({ 
-			url: `https://movie-history-6e707.firebaseio.com/movies/${movieID}.json`,
+			url: `https://movie-history-7a546.firebaseio.com/movies/${movieID}.json`,
 			method: "DELETE"
 		}).done( function(){
 			resolve();
