@@ -1,4 +1,34 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+let $ = require('jquery');
+
+
+function searchFor(movie){
+	return new Promise( function(resolve, reject){
+		$.ajax({
+			url: `http://www.omdbapi.com/?s=${movie}`,
+			type: "GET"
+		}).done( function(movieData){
+			console.log("XXX MovieData: ", movieData.Search);
+			console.log("MovieData: ", movieData);
+			if(movieData.Response === "False"){
+				console.log("Weird error that the promise does not catch, I believe is the result of no matches found from the search.");
+				return;
+			}
+			resolve(movieData.Search);
+		}).fail( function(error){
+			console.log("API CALL ERROR");
+			reject(error);
+		});
+	});
+}
+
+
+
+
+module.exports = {searchFor};
+},{"jquery":30}],2:[function(require,module,exports){
 'use strict';
 
 
@@ -67,7 +97,7 @@ function deleteMovie(movieID){
 }
 
 module.exports = {getMovies, addMovie, deleteMovie};
-},{"./firebaseConfig":3,"jquery":29}],2:[function(require,module,exports){
+},{"./firebaseConfig":4,"jquery":30}],3:[function(require,module,exports){
 "use strict";
 
 function getKey() {
@@ -80,7 +110,7 @@ function getKey() {
 
 module.exports = getKey;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 let firebase = require("firebase/app"),
@@ -100,8 +130,12 @@ firebase.initializeApp(config);
 
 module.exports = firebase;
 
-},{"./fb-getter":2,"firebase/app":6,"firebase/auth":7,"firebase/database":8}],4:[function(require,module,exports){
+},{"./fb-getter":3,"firebase/app":7,"firebase/auth":8,"firebase/database":9}],5:[function(require,module,exports){
 'use strict';
+
+///////////////////////////////////////////////
+///		MODULAR (REQUIRED) VARIABLES		///
+///////////////////////////////////////////////
 
 let $ = require('jquery');
 
@@ -109,11 +143,16 @@ let $ = require('jquery');
 let templates = require("../templates/movie-grid.hbs");
 let db = require("./db-interactions.js");
 let user = require("./user.js");
+let api = require("./api-interactions.js");
 
 $("#suggested-movies").hide();
 $("#my-movies").hide();
 $("#my-watched-movies").hide();
 $("#favorites").hide();
+
+////////////////////////////////////
+///		METHODS/FUNCTIONS		////
+////////////////////////////////////
 
 function populateDOM(){
 	let currentUser = user.getUser();
@@ -134,9 +173,64 @@ function populateDOM(){
 											</section>`);
 		}
 	});
+
 }
 
 
+// OTHER METHODS
+function findDuplicates(searchedMovies, myMovies){
+	var i, j;
+
+	for(i = 0; i < searchedMovies.length; i++){
+		for(j = 0; j < myMovies.length; j++){
+			if(searchedMovies[i].imdbID === myMovies[j].imdbID){
+				console.log("MATCHED!!: ", searchedMovies[i].Title);
+			}
+		}
+	}
+}
+
+
+
+
+
+//////////////////////////////
+//		EVENT LISTENERS		//
+//////////////////////////////
+
+
+// When user hits enter after searching
+$("#text-input").keypress( function(event){
+
+	// When user hits the enter key in search bar
+	if(event.keyCode === 13){
+
+		var userMovie = $("#text-input").val();
+		// Prevents an API call with bad user input
+		if(userMovie === "" || userMovie === " " || userMovie === undefined || userMovie.length <= 2){
+			console.log("INVALID USER INPUT ");
+			return;
+		}
+
+		// Declare movie arrays
+		var searchedMovies;
+		var myMovies;
+		// Search for user specified movie (IN API)
+		api.searchFor(userMovie)
+		.then( function(apiMovies){
+			// Store the returned movies that were searched for (API)
+			searchedMovies = apiMovies;
+		})
+		.then( db.getMovies)
+		.then( function(dbMovies){
+			// Store the returned movies (DATABASE)
+			myMovies = dbMovies;
+		// Then find movies with matching imdmIDs among the two arrays
+		}).then( function(){
+			findDuplicates(searchedMovies, myMovies);
+		});
+	}
+});
 
 
 // Login button onClick:
@@ -185,7 +279,16 @@ $(".select-button").click(function(event) {
 	// });
 });
 
-},{"../templates/movie-grid.hbs":30,"./db-interactions.js":1,"./user.js":5,"jquery":29}],5:[function(require,module,exports){
+// Logout Button onClick:
+$("#nav-logout-link").click( function(){
+	user.logOut();
+	console.log("CurrentUser: ", user.getUser());
+	$("#suggested-movies").html(" ");
+	$("#my-movies").html(" ");
+	$("#my-watched-movies").html(" ");
+});
+
+},{"../templates/movie-grid.hbs":31,"./api-interactions.js":1,"./db-interactions.js":2,"./user.js":6,"jquery":30}],6:[function(require,module,exports){
 "use strict";
 
 let firebase = require("./firebaseConfig"),
@@ -220,7 +323,7 @@ function setUser(val) {
 
 module.exports = {logInGoogle, logOut, getUser, setUser};
 
-},{"./firebaseConfig":3}],6:[function(require,module,exports){
+},{"./firebaseConfig":4}],7:[function(require,module,exports){
 (function (global){
 var firebase = (function(){
 /*! @license Firebase v3.6.9
@@ -256,7 +359,7 @@ return firebase;}).call(typeof global !== undefined ? global : typeof self !== u
 module.exports = firebase;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 var firebase = require('./app');
 (function(){
@@ -501,7 +604,7 @@ a,function(a,c){if("create"===a)try{c.auth()}catch(d){}});firebase.INTERNAL.exte
 module.exports = firebase.auth;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":6}],8:[function(require,module,exports){
+},{"./app":7}],9:[function(require,module,exports){
 (function (global){
 var firebase = require('./app');
 (function(){
@@ -769,7 +872,7 @@ d;return d.Ya},{Reference:U,Query:X,Database:Se,enableLogging:xc,INTERNAL:Y,TEST
 module.exports = firebase.database;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":6}],9:[function(require,module,exports){
+},{"./app":7}],10:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -837,7 +940,7 @@ exports['default'] = inst;
 module.exports = exports['default'];
 
 
-},{"./handlebars/base":10,"./handlebars/exception":13,"./handlebars/no-conflict":23,"./handlebars/runtime":24,"./handlebars/safe-string":25,"./handlebars/utils":26}],10:[function(require,module,exports){
+},{"./handlebars/base":11,"./handlebars/exception":14,"./handlebars/no-conflict":24,"./handlebars/runtime":25,"./handlebars/safe-string":26,"./handlebars/utils":27}],11:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -943,7 +1046,7 @@ exports.createFrame = _utils.createFrame;
 exports.logger = _logger2['default'];
 
 
-},{"./decorators":11,"./exception":13,"./helpers":14,"./logger":22,"./utils":26}],11:[function(require,module,exports){
+},{"./decorators":12,"./exception":14,"./helpers":15,"./logger":23,"./utils":27}],12:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -961,7 +1064,7 @@ function registerDefaultDecorators(instance) {
 }
 
 
-},{"./decorators/inline":12}],12:[function(require,module,exports){
+},{"./decorators/inline":13}],13:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -992,7 +1095,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":26}],13:[function(require,module,exports){
+},{"../utils":27}],14:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1045,7 +1148,7 @@ exports['default'] = Exception;
 module.exports = exports['default'];
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1093,7 +1196,7 @@ function registerDefaultHelpers(instance) {
 }
 
 
-},{"./helpers/block-helper-missing":15,"./helpers/each":16,"./helpers/helper-missing":17,"./helpers/if":18,"./helpers/log":19,"./helpers/lookup":20,"./helpers/with":21}],15:[function(require,module,exports){
+},{"./helpers/block-helper-missing":16,"./helpers/each":17,"./helpers/helper-missing":18,"./helpers/if":19,"./helpers/log":20,"./helpers/lookup":21,"./helpers/with":22}],16:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1134,7 +1237,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":26}],16:[function(require,module,exports){
+},{"../utils":27}],17:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1230,7 +1333,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../exception":13,"../utils":26}],17:[function(require,module,exports){
+},{"../exception":14,"../utils":27}],18:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1257,7 +1360,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../exception":13}],18:[function(require,module,exports){
+},{"../exception":14}],19:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1288,7 +1391,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":26}],19:[function(require,module,exports){
+},{"../utils":27}],20:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1316,7 +1419,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1330,7 +1433,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1365,7 +1468,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":26}],22:[function(require,module,exports){
+},{"../utils":27}],23:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1414,7 +1517,7 @@ exports['default'] = logger;
 module.exports = exports['default'];
 
 
-},{"./utils":26}],23:[function(require,module,exports){
+},{"./utils":27}],24:[function(require,module,exports){
 (function (global){
 /* global window */
 'use strict';
@@ -1438,7 +1541,7 @@ module.exports = exports['default'];
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1737,7 +1840,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 }
 
 
-},{"./base":10,"./exception":13,"./utils":26}],25:[function(require,module,exports){
+},{"./base":11,"./exception":14,"./utils":27}],26:[function(require,module,exports){
 // Build out our basic SafeString type
 'use strict';
 
@@ -1754,7 +1857,7 @@ exports['default'] = SafeString;
 module.exports = exports['default'];
 
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1880,15 +1983,15 @@ function appendContextPath(contextPath, id) {
 }
 
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
 module.exports = require('./dist/cjs/handlebars.runtime')['default'];
 
-},{"./dist/cjs/handlebars.runtime":9}],28:[function(require,module,exports){
+},{"./dist/cjs/handlebars.runtime":10}],29:[function(require,module,exports){
 module.exports = require("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":27}],29:[function(require,module,exports){
+},{"handlebars/runtime":28}],30:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -12110,7 +12213,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var HandlebarsCompiler = require('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template({"1":function(container,depth0,helpers,partials,data) {
@@ -12133,4 +12236,4 @@ module.exports = HandlebarsCompiler.template({"1":function(container,depth0,help
     + "</h4>\n	</div>\n</section>";
 },"useData":true});
 
-},{"hbsfy/runtime":28}]},{},[4]);
+},{"hbsfy/runtime":29}]},{},[5]);
