@@ -1,13 +1,13 @@
 <section id="card-{{movie-name}}" class="card-wrapper col-sm-12 col-md-4" >
-     <div class="innerCard" style="border: 2px solid black">
+    <div class="innerCard" style="border: 2px solid black">
 	     <h3 class="movie-header"><strong>{{movie-name}}</strong> </h3>
 	     <h4 class="movie-year"><strong>{{movie-year}}</strong></h4>
-	     <h4><strong>Leading Actors:</strong></h4>
-	     <ul class="movie-actors"> 
+	     {{!-- <h4><strong>Leading Actors:</strong></h4> --}}
+	     {{!-- <ul class="movie-actors"> 
 		     {{#each actor}}
 		         <li class="single-actor">{{this}}</li>
 		     {{/each}}
-	     </ul>
-	     <h4 class="movie-rating"><strong>Rating:</strong>{{movie-rating}}</h4>
+	     </ul> --}}	     
+ 		<h4 class="movie-rating"><strong>Rating:</strong>{{movie-rating}}</h4>
 	</div>
 </section>

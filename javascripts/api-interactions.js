@@ -3,6 +3,7 @@
 let $ = require('jquery');
 
 function searchFor(movie){
+	console.log("movie", movie);
 	return new Promise( function(resolve, reject){
 		$.ajax({
 			url: `https://api.themoviedb.org/3/search/movie?query=${movie}&api_key=1425d42c47a975ca77e4f3f66bcb94d2&include_adult=false`,
