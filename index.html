@@ -13,12 +13,13 @@
     <div>
       <img src="images/moviereel.jpeg" width="100" height="100">
       <h2>Movie Finder</h2>
-      <form>
+      <form id="search-form">
         <div class="form-group row input-div">
           <div class="col-sm-10">
-            <input type="text" class="form-control form-control-lg" id="text-input" placeholder="Search OMDb and your tracked movies">
+            <input type="search" id="text-input" class="form-control form-control-lg" placeholder="Search OMDb and your tracked movies">
           </div>
         </div>
+      </form>
     </div>
       <nav>
         <a href="#" id="nav-register-link">Register</a>
@@ -26,18 +27,18 @@
         <a href="#" id="nav-logout-link">Logout</a>
       </nav>
   </header>
-  <div class="container" id="main-container">
-    <h2 id="current-list-location"></h2> <!--Current List Location -->
+  <div id="main-container" class="container" >
+    <h2 id="current-list-visible"></h2>
     <div class="row">
       <div class="form-group">
         <div class="items-collection">
           <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
             <div class="info-block block-info clearfix">
-              <div data-toggle="buttons" class="btn-group bizmoduleselect">
-                <label class="btn btn-default">
-                  <div class="itemcontent">
-                    <span class="glyphicon glyphicon-inbox"></span>
-                    <h5>Show Untracked</h5>
+              <div data-toggle="buttons" class="btn-group itemcontent">
+                <label id="my-movie-search-button" class="btn btn-default select-button">
+                  <div id="my-movie-search-text" class="itemcontent">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <h5>My Movie Search</h5>
                   </div>
                 </label>
               </div>
@@ -46,8 +47,8 @@
           <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
             <div class="info-block block-info clearfix">
               <div data-toggle="buttons" class="btn-group itemcontent">
-                <label class="btn btn-default">
-                  <div class="itemcontent">
+                <label id="my-unwatched-button" class="btn btn-default select-button">
+                  <div id="my-unwatched-text" class="itemcontent">
                     <span class="glyphicon glyphicon-eye-close"></span>
                     <h5>Show Unwatched</h5>
                   </div>
@@ -58,8 +59,8 @@
           <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
             <div class="info-block block-info clearfix">
               <div data-toggle="buttons" class="btn-group itemcontent">
-                <label class="btn btn-default">
-                  <div class="itemcontent">
+                <label id="my-watched-button" class="btn btn-default select-button">
+                  <div id="my-watched-text" class="itemcontent">
                     <span class="glyphicon glyphicon-eye-open"></span>
                     <h5>Show Watched</h5>
                   </div>
@@ -70,8 +71,8 @@
           <div class="items col-xs-6 col-sm-3 col-md-3 col-lg-3">
             <div class="info-block block-info clearfix">
               <div data-toggle="buttons" class="btn-group itemcontent">
-                <label class="btn btn-default">
-                  <div class="itemcontent">
+                <label id="my-favorites-button" class="btn btn-default select-button">
+                  <div id="my-favorites-text" class="itemcontent">
                     <span class="glyphicon glyphicon-star"></span>
                     <h5>Show Favorites</h5>
                   </div>
@@ -82,9 +83,10 @@
         </div>
       </div>
     </div>
-    <div class="container" id="suggested-movies"></div>
-    <div class="container" id="my-movies"></div>
-    <div class="container" id="my-watched-movies"></div>
+    <div id="suggested-movies" class="container" >My Movie Search</div>
+    <div id="my-movies" class="container">Unwatched Movies</div>
+    <div id="my-watched-movies" class="container">Watched Movies</div>
+    <div id="favorites" class="container">Favorites</div>
   </div>
   <div id="footer"></div>
   <script src="/dist/jquery.min.js" type="text/javascript"></script>
