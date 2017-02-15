@@ -35,7 +35,7 @@ function getMovies(){
 	});
 }
 
-Adds a movie (with a UID)
+//Adds a movie (with a UID)
 function addMovie(movieObject){
 	console.log("Adding Song: ", movieObject);
 
