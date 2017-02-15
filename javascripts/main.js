@@ -12,6 +12,7 @@ let db = require("./db-interactions.js");
 let user = require("./user.js");
 let api = require("./api-interactions.js");
 
+// Hides all Divs on load
 $("#suggested-movies").hide();
 $("#my-movies").hide();
 $("#my-watched-movies").hide();
@@ -115,6 +116,7 @@ $("#text-input").keypress(function(e) {
 		let input = $("#text-input").val();
 		$("#text-input").val("");
 		console.log("Input: ", input);
+		$(".hidden-div").hide();
 		$("#suggested-movies").show();
 		$("#current-list-visible").html("My Movie Search");
 		$(".select-button").removeClass("blue-background");
@@ -124,26 +126,22 @@ $("#text-input").keypress(function(e) {
 	}
 });
 
+// Listeners on buttons to add backgrounds to active button and hides other associated
+// Divs while showing DIV associated with that button
 $(".select-button").click(function(event) {
 	$(".select-button").removeClass("blue-background");
 	$(".select-button").children("div").removeClass("blue-background");
 	$(this).addClass("blue-background");
 	$(this).children("div").addClass("blue-background");
+	$(".hidden-div").hide();
 	if (event.currentTarget.id === "my-favorites-button") {
 		$("#current-list-visible").html("My Favorites");
 		$("#favorites").show();
+	} else if (event.currentTarget.id === "my-watched-button"){
+		$("#current-list-visible").html("My Watched Movies");
+		$("#my-watched-movies").show();
 	}
-	// let allButtons = $(".select-button");
-	// $.each(allButtons, function(index, value) {
-	// 	console.log('looping?');
-	//   if (event.currentTarget) {
-	// 		$(event.currentTarget).addClass("blue-background");
-	// 		$(event.currentTarget).children("div").addClass("blue-background");
-	// 	} else {
-	// 		allButtons[index].removeClass("blue-background");
-	//
-	// 	}
-	// });
+
 });
 
 // Logout Button onClick:
