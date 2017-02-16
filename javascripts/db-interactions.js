@@ -19,11 +19,11 @@ var firebase = require("./firebaseConfig");
 // 	});
 // }
 
-function getMovies(){
+function getMovies(user){
 	return new Promise(function(resolve, reject){
 		$.ajax({
 			// url: `https://movie-history-6e707.firebaseio.com?orderBy="uid"&equalTo="${user}"`
-			url: `https://movie-history-7a546.firebaseio.com?orderBy="uid"&equalTo="${user}"`
+			url: `https://movie-history-7a546.firebaseio.com?orderBy="uid"&equalTo="${user}"`,
 			type: "GET"
 		}).done( function(movieData){
 			console.log("GETMOVIES(): ", movieData);
@@ -41,7 +41,7 @@ function addMovie(movieObject){
 
 	return new Promise(function(resolve, reject){
 		$.ajax({
-			url: `https://movie-history-7a546.firebaseio.com`,
+			url: `https://movie-history-7a546.firebaseio.com/movies.json`,
 			type: "POST",
 			data: JSON.stringify(movieObject),
 			dataType: "json"

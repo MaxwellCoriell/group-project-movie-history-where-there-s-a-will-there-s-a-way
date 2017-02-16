@@ -7,7 +7,7 @@
 let $ = require('jquery');
 
 // Required modules
-let templates = require("../templates/movie-grid.hbs");
+// let templates = require("../templates/movie-grid.hbs");
 let db = require("./db-interactions.js");
 let user = require("./user.js");
 let api = require("./api-interactions.js");
