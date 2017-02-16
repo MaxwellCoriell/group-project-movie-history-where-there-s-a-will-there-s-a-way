@@ -101,7 +101,9 @@ $("#nav-login-link").click(function(){
 	user.logInGoogle()
 	.then( function(result){
 		user.setUser(result.user.uid);
-		populateDOM();
+		$("#nav-login-link").addClass("hide");
+		$("#nav-register-link").addClass("hide");
+		$("#nav-logout-link").removeClass("hide");
 	});
 });
 
@@ -109,11 +111,13 @@ $("#nav-login-link").click(function(){
 $("#nav-logout-link").click( function(){
 	user.logOut();
 	console.log("CurrentUser: ", user.getUser());
+	$("#nav-login-link").removeClass("hide");
+	$("#nav-register-link").removeClass("hide");
+	$("#nav-logout-link").addClass("hide");
 	$("#suggested-movies").html(" ");
 	$("#my-movies").html(" ");
 	$("#my-watched-movies").html(" ");
 });
-
 
 
 
