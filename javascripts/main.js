@@ -18,22 +18,23 @@ let api = require("./api-interactions.js");
 ////////////////////////////////////
 
 function populateDOM(){
+	console.log("We need some movies!!");
 	let currentUser = user.getUser();
+	console.log("the user is: ", currentUser);
 	db.getMovies(currentUser)
 	.then(function(movieData) {
-		// let movieActors = "";
 		for (var i = 0; i < movieData.length; i++) {
 			$("#suggested-movies").append(
-											`<section id="card-${movieData[i]}-${movieData[i].keys}" class="card-wrapper col-xs-4" >
-												<div class="innerCard" style="border: 2px solid black">
-												    <h3 class="movie-header"><strong>${movieData[i].title}</strong></h3>
-												    <h4 class="movie-year"><strong>${movieData[i].year}</strong></h4>
-												    <img src="${movieData[i].posterURL}" height="200" >
-												    <h4><strong>Leading Actors:</strong>${movieData[i].actors}</h4>
-												    <button type="button" value="add-to-my-movies">I want to see this movie</button>
-		    										<button type="button" value="add-to-my-watched-movies">I seen this movie</button>
-		    									</div>
-											</section>`);
+					`<section id="card-${movieData[i]}-${movieData[i].keys}" class="card-wrapper col-xs-4" >
+						<div class="innerCard" style="border: 2px solid black">
+						    <h3 class="movie-header"><strong>${movieData[i].title}</strong></h3>
+						    <h4 class="movie-year"><strong>${movieData[i].year}</strong></h4>
+						    <img src="${movieData[i].posterURL}" height="200" >
+						    <h4><strong>Leading Actors:</strong>${movieData[i].actors}</h4>
+						    <button type="button" value="add-to-my-movies">I want to see this movie</button>
+								<button type="button" value="add-to-my-watched-movies">I seen this movie</button>
+							</div>
+					</section>`);
 		}
 	});
 
@@ -67,7 +68,6 @@ $("#text-input").keypress( function(event){
 
 	// When user hits the enter key in search bar
 	if(event.keyCode === 13){
-
 		var userMovie = $("#text-input").val();
 		// Prevents an API call with bad user input
 		if(userMovie === "" || userMovie === " " || userMovie === undefined || userMovie.length <= 2){
@@ -76,22 +76,22 @@ $("#text-input").keypress( function(event){
 		}
 
 		// Declare movie arrays
-		var searchedMovies;
+		// var searchedMovies;
 		var myMovies;
 		// Search for user specified movie (IN API)
 		api.searchFor(userMovie)
-		.then( function(apiMovies){
+		.then(function(movieResults){	
 			// Store the returned movies that were searched for (API)
-			searchedMovies = apiMovies;
-		})
-		.then( db.getMovies)
-		.then( function(dbMovies){
-			// Store the returned movies (DATABASE)
-			myMovies = dbMovies;
-		// Then find movies with matching imdmIDs among the two arrays
-		}).then( function(){
-			findDuplicates(searchedMovies, myMovies);
+			console.log("what is movieResults", movieResults);
 		});
+		// .then( db.getMovies)
+		// .then( function(dbMovies){
+		// 	// Store the returned movies (DATABASE)
+		// 	myMovies = dbMovies;
+		// // Then find movies with matching imdmIDs among the two arrays
+		// }).then( function(){
+		// 	findDuplicates(searchedMovies, myMovies);
+		// });
 	}
 });
 
