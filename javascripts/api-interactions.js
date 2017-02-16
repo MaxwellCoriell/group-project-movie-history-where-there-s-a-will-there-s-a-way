@@ -19,6 +19,8 @@ function searchFor(movie){
 			// }
 
 				resolve(movieData);
+
+				
 		}).fail( function(error){
 			console.log("API CALL ERROR");
 			reject(error);
