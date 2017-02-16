@@ -23,7 +23,7 @@ function getMovies(){
 	return new Promise(function(resolve, reject){
 		$.ajax({
 			// url: `https://movie-history-6e707.firebaseio.com?orderBy="uid"&equalTo="${user}"`
-			url: `https://movie-history-7a546.firebaseio.com/movies.json`,
+			url: `https://movie-history-7a546.firebaseio.com?orderBy="uid"&equalTo="${user}"`
 			type: "GET"
 		}).done( function(movieData){
 			console.log("GETMOVIES(): ", movieData);
@@ -37,7 +37,7 @@ function getMovies(){
 
 //Adds a movie (with a UID)
 function addMovie(movieObject){
-	console.log("Adding Song: ", movieObject);
+	console.log("Adding movie: ", movieObject);
 
 	return new Promise(function(resolve, reject){
 		$.ajax({
