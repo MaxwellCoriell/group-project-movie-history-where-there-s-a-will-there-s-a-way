@@ -17,20 +17,24 @@ let api = require("./api-interactions.js");
 ///		METHODS/FUNCTIONS		////
 ////////////////////////////////////
 
-function populateDOM(){
-	console.log("We need some movies!!");
+function populateDOM(userMovie){
+	console.log("We need some movies!!", userMovie);
 	let currentUser = user.getUser();
 	console.log("the user is: ", currentUser);
-	db.getMovies(currentUser)
-	.then(function(movieData) {
-		for (var i = 0; i < movieData.length; i++) {
+	//db.getMovies(currentUser)
+	api.searchFor(userMovie)
+	.then( (mov)=>{ 
+		var movieData = mov;
+		console.log("13", movieData);
+		for (var i = 0; i < movieData.results.length; i++) {
+			console.log("15", movieData);
 			$("#suggested-movies").append(
-					`<section id="card-${movieData[i]}-${movieData[i].keys}" class="card-wrapper col-xs-4" >
+					`<section id="card-${movieData.results[i]}-${movieData.results[i].keys}" class="card-wrapper col-xs-4" >
 						<div class="innerCard" style="border: 2px solid black">
-						    <h3 class="movie-header"><strong>${movieData[i].title}</strong></h3>
-						    <h4 class="movie-year"><strong>${movieData[i].year}</strong></h4>
-						    <img src="${movieData[i].posterURL}" height="200" >
-						    <h4><strong>Leading Actors:</strong>${movieData[i].actors}</h4>
+						    <h3 class="movie-header"><strong>${movieData.results[i].original_title}</strong></h3>
+						    <h4 class="movie-year"><strong>${movieData.results[i].year}</strong></h4>
+						    <img src="${movieData.results[i].posterURL}" height="200" >
+						    <h4><strong>Leading Actors:</strong>${movieData.results[i].actors}</h4>
 						    <button type="button" value="add-to-my-movies">I want to see this movie</button>
 								<button type="button" value="add-to-my-watched-movies">I seen this movie</button>
 							</div>
@@ -77,14 +81,16 @@ $("#text-input").keypress( function(event){
 
 		// Declare movie arrays
 		// var searchedMovies;
-		var myMovies;
+		// var myMovies;
 		// Search for user specified movie (IN API)
-		api.searchFor(userMovie)
-		.then(function(movieResults){	
-			// Store the returned movies that were searched for (API)
-			console.log("what is movieResults", movieResults);
-		});
-		// .then( db.getMovies)
+		//api.searchFor(userMovie)
+		console.log("userMovie", userMovie);
+		populateDOM(userMovie);
+		// .then(function(movieResults){	
+		// 	// Store the returned movies that were searched for (API)
+		// 	console.log("what is movieResults", movieResults);
+		// });
+		// // .then( db.getMovies);
 		// .then( function(dbMovies){
 		// 	// Store the returned movies (DATABASE)
 		// 	myMovies = dbMovies;
@@ -104,6 +110,7 @@ $("#nav-login-link").click(function(){
 		$("#nav-login-link").addClass("hide");
 		$("#nav-register-link").addClass("hide");
 		$("#nav-logout-link").removeClass("hide");
+		populateDOM();
 	});
 });
 
