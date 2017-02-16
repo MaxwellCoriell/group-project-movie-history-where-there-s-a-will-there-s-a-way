@@ -96,4 +96,16 @@ nav a:hover {
 .glyphicon {
   font-size: 1.5em; }
 
+#slider-container {
+  width: 100%; }
+
+#rating {
+  margin: 0 0.625em 0 0;
+  float: left; }
+
+#slider {
+  margin: 0 20% 0 0;
+  width: 50%;
+  float: left; }
+
 /*# sourceMappingURL=main.css.map */
